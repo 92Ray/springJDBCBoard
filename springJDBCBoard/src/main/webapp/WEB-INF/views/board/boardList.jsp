@@ -32,7 +32,7 @@
     .header-box {
         display: flex;
         justify-content: space-between;
-        align-items: flex-end;
+        align-items: center;
         border-bottom: 3px solid var(--t1-red);
         padding-bottom: 15px;
         margin-bottom: 30px;
@@ -47,18 +47,24 @@
 
     .header-box h1 span { color: var(--t1-red); }
 
-    .btn-write {
+    .btn-group {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+    }
+
+    .btn {
         background: var(--t1-red);
         color: white;
         text-decoration: none;
-        padding: 10px 25px;
+        padding: 10px 20px;
         font-weight: bold;
         border-radius: 4px;
         transition: 0.3s;
         text-transform: uppercase;
     }
 
-    .btn-write:hover {
+    .btn:hover {
         background: white;
         color: var(--t1-red);
         box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
@@ -91,7 +97,6 @@
 
     .t1-table tr:last-child td { border-bottom: none; }
 
-    /* Hover Effect */
     .t1-table tbody tr { transition: 0.2s; cursor: pointer; }
     .t1-table tbody tr:hover {
         background-color: var(--t1-table-hover);
@@ -101,14 +106,6 @@
     .title-cell { text-align: left !important; padding-left: 30px !important; }
     .title-cell a { color: inherit; text-decoration: none; font-weight: 500; }
 
-    /* Pagination / Footer */
-    .table-footer {
-        margin-top: 20px;
-        text-align: right;
-        font-size: 0.8rem;
-        color: #555;
-        font-family: monospace;
-    }
     /* Search Bar Styles */
     .search-container {
         display: flex;
@@ -165,23 +162,34 @@
         color: white;
         text-shadow: 0 0 5px var(--t1-red);
     }
-    .btn-group {
-        display: flex;
-        gap: 10px; /* 버튼 사이의 간격 */
-    }
 </style>
 </head>
 <body>
-    
-    <div class="container">
+<div class="container">
     <div class="header-box">
-    <h1>BOARD <span>LIST</span></h1>
-    
-    <div class="btn-group">
-        <a href="/board/boardlist" class="btn-write">List View</a>
-        <a href="/board/insertForm" class="btn-write">New Mission</a>
+        <h1>BOARD <span>LIST</span></h1>
+        <div class="btn-group">
+            <c:choose>
+                <c:when test="${not empty sessionScope.loginUser}">
+                    <span style="color:#C69C6D; padding:0 10px;">
+                        ${sessionScope.loginUser.nickName} 님 환영합니다
+                    </span>
+                    <!-- 글쓰기 버튼 (회원/비회원 모두 클릭 가능) -->
+                    <a href="/board/insertForm" class="btn">New Mission</a>
+                    <!-- 로그아웃 -->
+                    <a href="/user/logout" class="btn">Logout</a>
+                    <!-- 회원탈퇴 -->
+                    <a href="/user/delete" class="btn" onclick="return confirm('정말 탈퇴하시겠습니까?');">회원탈퇴</a>
+                </c:when>
+                <c:otherwise>
+                    <a href="/user/loginForm" class="btn">Login</a>
+                    <a href="/user/joinForm" class="btn">Sign Up</a>
+                    <!-- 글쓰기 버튼 (비회원도 가능) -->
+                    <a href="/board/insertForm" class="btn">New Mission</a>
+                </c:otherwise>
+            </c:choose>
+        </div>
     </div>
-</div>
 
     <div class="search-container">
         <form action="/board/search" method="get" class="search-form">
@@ -220,17 +228,13 @@
                 </c:when>
                 <c:otherwise>
                     <tr>
-                        <td colspan="4" style="padding: 50px; color: #555;">작성된 게시글이 없습니다.</td>
+                        <td colspan="4" style="padding:50px; color:#555;">작성된 게시글이 없습니다.</td>
                     </tr>
                 </c:otherwise>
             </c:choose>
         </tbody>
     </table>
 
-    <div class="table-footer">
-        [ SYSTEM: CONNECTED TO JDBCBOARD_SEQ.NEXTVAL ]
-    </div>
 </div>
-
 </body>
 </html>

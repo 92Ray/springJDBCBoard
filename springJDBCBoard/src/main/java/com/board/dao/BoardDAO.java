@@ -1,6 +1,7 @@
 package com.board.dao;
 
 import java.sql.ResultSet;
+
 import java.sql.SQLException;
 import java.util.List;
 
@@ -18,15 +19,13 @@ public class BoardDAO {
 	private JdbcTemplate jdbcTemplate;
 
 	public int insertBoard(Board board) {
-		String query ="INSERT INTO JDBCBOARD VALUES(JDBCBOARD_SEQ.NEXTVAL, ?, ?, ?, SYSDATE)";
-		
-		int count = jdbcTemplate.update(query, board.getTitle(), board.getContent(), board.getWriter());
-		
-		return count;
+	    String sql = "INSERT INTO JDBCBOARD (NO, TITLE, WRITER, CONTENT, REGDATE) "
+	               + "VALUES (JDBCBOARD_SEQ.NEXTVAL, ?, ?, ?, SYSDATE)";
+	    return jdbcTemplate.update(sql, board.getTitle(), board.getWriter(), board.getContent());
 	}
 
 	public List<Board> boardList() {
-		String query = "SELECT * FROM JDBCBOARD WHERE NO > 0 ORDER BY NO DESC, REG_DATE DESC";
+		String query = "SELECT * FROM JDBCBOARD WHERE NO > 0 ORDER BY NO DESC, REGDATE DESC";
 		
 		List<Board> boardList = jdbcTemplate.query(query, new RowMapper<Board>() {
 			@Override
@@ -37,7 +36,7 @@ public class BoardDAO {
 				board.setTitle(rs.getString("TITLE"));
 				board.setContent(rs.getString("CONTENT"));
 				board.setWriter(rs.getString("WRITER"));
-				board.setRegDate(rs.getDate("REG_DATE"));
+				board.setRegDate(rs.getDate("REGDATE"));
 				
 				return board;
 			}
@@ -58,7 +57,7 @@ public class BoardDAO {
 				board.setTitle(rs.getString("TITLE"));
 				board.setContent(rs.getString("CONTENT"));
 				board.setWriter(rs.getString("WRITER"));
-				board.setRegDate(rs.getDate("REG_DATE"));
+				board.setRegDate(rs.getDate("REGDATE"));
 				
 				return board;
 			}
@@ -87,7 +86,7 @@ public class BoardDAO {
 	public List<Board> boardSerch(Board board) {
 		String callName = board.getSearchType();
 		
-		String query = "SELECT * FROM JDBCBOARD WHERE " +callName+" LIKE ? ORDER BY NO DESC, REG_DATE DESC";
+		String query = "SELECT * FROM JDBCBOARD WHERE " +callName+" LIKE ? ORDER BY NO DESC, REGDATE DESC";
 		
 		List<Board> boardList = jdbcTemplate.query(query, new RowMapper<Board>() {
 			@Override
@@ -98,7 +97,7 @@ public class BoardDAO {
 				board.setTitle(rs.getString("TITLE"));
 				board.setContent(rs.getString("CONTENT"));
 				board.setWriter(rs.getString("WRITER"));
-				board.setRegDate(rs.getDate("REG_DATE"));
+				board.setRegDate(rs.getDate("REGDATE"));
 				
 				return board;
 			}
