@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -104,6 +105,7 @@ textarea {
 	cursor: pointer;
 	transition: 0.3s;
 	text-transform: uppercase;
+	text-align: center;
 }
 
 .btn-submit {
@@ -132,6 +134,10 @@ textarea {
 .btn-cancel {
 	background: #333;
 	color: #bbb;
+	text-decoration: none;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 }
 
 .btn-cancel:hover {
@@ -159,6 +165,7 @@ textarea {
 	transition: 0.3s;
 	border: none;
 	cursor: pointer;
+	text-align: center;
 }
 
 .btn-list:hover {
@@ -170,40 +177,53 @@ textarea {
 </head>
 <body>
 
-	<div class="write-container">
-		<div class="header">
-			<h1>
-				T1 COMMUNITY <span>POST</span>
-			</h1>
-		</div>
+<div class="write-container">
+    <div class="header">
+        <h1>
+            T1 COMMUNITY <span>POST</span>
+        </h1>
+    </div>
 
-		<form action="/board/insert" method="post">
-			<div class="form-group">
-				<label for="writer">작성자(Writer)</label> <input type="text"
-					id="writer" name="writer" placeholder="작성자 이름을 입력하세요" required>
-			</div>
+    <form action="/board/insert" method="post">
+        <!-- 작성자 -->
+        <div class="form-group">
+            <label for="writer">작성자(Writer)</label>
+            <c:choose>
+                <c:when test="${isMember}">
+                    <input type="text" id="writer" name="writer" value="${writer}" readonly>
+                </c:when>
+                <c:otherwise>
+                    <input type="text" id="writer" name="writer" placeholder="작성자 이름을 입력하세요" required>
+                </c:otherwise>
+            </c:choose>
+        </div>
 
-			<div class="form-group">
-				<label for="title">제목(Title)</label> <input type="text" id="title"
-					name="title" placeholder="게시글 제목을 입력하세요" required>
-			</div>
+        <!-- 제목 -->
+        <div class="form-group">
+            <label for="title">제목(Title)</label>
+            <input type="text" id="title" name="title" placeholder="게시글 제목을 입력하세요" required>
+        </div>
 
-			<div class="form-group">
-				<label for="content">내용(Content)</label>
-				<textarea id="content" name="content"
-					placeholder="T1 선수들에게 보낼 응원의 메시지를 작성하세요"></textarea>
-			</div>
+        <!-- 내용 -->
+        <div class="form-group">
+            <label for="content">내용(Content)</label>
+            <textarea id="content" name="content" placeholder="T1 선수들에게 보낼 응원의 메시지를 작성하세요"></textarea>
+        </div>
 
-			<div class="btn-area">
-				<a href="/board/boardlist" class="btn-list">게시판 목록</a>
-				<button type="submit" class="btn btn-submit">게시판 등록</button>
-				<button type="reset" class="btn btn-reset">등록 취소</button>
-			</div>
-		</form>
+        <!-- 버튼 영역 -->
+        <div class="btn-area">
+            <a href="/board/boardlist" class="btn btn-list">게시판 목록</a>
+            <button type="submit" class="btn btn-submit">게시판 등록</button>
+            <button type="reset" class="btn btn-reset">등록 취소</button>
 
-		<div class="bottom-deco">[ SYSTEM: READY TO TRANSMIT DATA TO
-			JDBCBOARD ]</div>
-	</div>
+            <c:if test="${!isMember}">
+                <a href="/user/joinForm" class="btn btn-cancel">회원가입</a>
+            </c:if>
+        </div>
+    </form>
+
+    <div class="bottom-deco">[ SYSTEM: READY TO TRANSMIT DATA TO JDBCBOARD ]</div>
+</div>
 
 </body>
 </html>
