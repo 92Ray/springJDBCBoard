@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.board.dao.BoardDAO;
 import com.board.domain.Board;
@@ -28,12 +29,14 @@ public class BoardServiceImpl implements BoardService {
 	}
 
 	@Override
+	@Transactional
 	public int updateBoard(Board board) throws Exception {
 		int count = boardDAO.updateBoard(board);
 		return count;
 	}
 
 	@Override
+	@Transactional
 	public int deleteBoard(Board board) throws Exception {
 		int count = boardDAO.deleteBoard(board);
 		return count;
